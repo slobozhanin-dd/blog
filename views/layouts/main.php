@@ -9,6 +9,7 @@ use yii\bootstrap4\Breadcrumbs;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -40,20 +41,20 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
+
         ],
-    ]);
+    ]);?>
+    <?php if(Yii::$app->user->isGuest):?>
+                        <li><a href="<?= Url::toRoute(['site/login'])?>">Login</a></li>
+                        <li><a href="<?= Url::toRoute(['site/signup'])?>">Register</a></li>
+                        <?php else: ?>
+                        <?= Html::beginForm(['site/logout'], 'post')
+                        . Html::submitButton(
+            'Logout (' . Yii::$app->user->identity->username . ')',
+                                ['class' => 'btn btn-link logout', 'style'=>"padding-top:10px;"]
+                        )
+                        . Html::endForm() ?>
+                        <?php endif;
     NavBar::end();
     ?>
 </header>
